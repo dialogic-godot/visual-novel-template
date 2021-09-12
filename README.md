@@ -1,4 +1,4 @@
-# Dialogic Visual Novel Template
+# Dialogic Visual Novel Template (WIP)
 
 This is a template for visual novels that contains a fully working menu.
 ![grafik](https://user-images.githubusercontent.com/42868150/132996444-fd045b26-6b35-4983-9414-e86604011c15.png)
