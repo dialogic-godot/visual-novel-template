@@ -15,6 +15,7 @@ var current_saved = false
 ################################################################################
 
 func add_game_node(node):
+	stop_previous_game()
 	$MenuAnimations.play("Fade")
 	get_node(Game).add_child(node)
 	node.connect("timeline_end", self, "_on_game_ended")
@@ -22,6 +23,10 @@ func add_game_node(node):
 	$MainMenu.hide()
 	$SubMenus.hide()
 	$MenuAnimations.play("reset")
+
+func stop_previous_game() -> void:
+	for child in get_node(Game).get_children():
+		child.queue_free()
 
 func is_game_playing() -> bool:
 	return bool(get_node(Game).get_child_count())
@@ -61,9 +66,9 @@ func _input(event):
 
 func _on_game_ended(_something):
 	yield(get_tree().create_timer(0.2), "timeout")
-	$MainMenu.open()
 	$MenuMusic.play()
-	$MenuAnimations.play("Fade")
+	$MenuAnimations.play_backwards("Fade")
+	$MainMenu.open()
 	show()
 
 func _on_Ingame_Save_Button_pressed():

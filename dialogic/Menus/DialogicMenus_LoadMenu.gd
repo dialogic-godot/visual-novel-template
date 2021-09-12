@@ -45,7 +45,7 @@ func _ready() -> void:
 # will load the slot @save_slot_name or show a warning
 func save_slot_pressed(save_slot_name:String) -> void:
 	current_selected_slot = save_slot_name
-	if MenusContainer.is_game_playing() and not get_parent().current_saved:
+	if MenusContainer.is_game_playing() and not MenusContainer.current_saved:
 		MenusContainer.LooseWarning.open(self, "load_slot")
 	else:
 		load_slot()

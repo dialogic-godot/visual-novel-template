@@ -23,7 +23,6 @@ func _on_NewGame_Button_pressed():
 	dialog.layer = 0
 	get_parent().add_game_node(dialog)
 
-
 func _on_LoadGame_Button_pressed():
 	hide()
 	get_parent().get_node("SubMenus").open_load_menu()
