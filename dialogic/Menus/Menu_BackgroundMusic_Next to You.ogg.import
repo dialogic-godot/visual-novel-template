@@ -1,0 +1,15 @@
+[remap]
+
+importer="ogg_vorbis"
+type="AudioStreamOGGVorbis"
+path="res://.import/Menu_BackgroundMusic_Next to You.ogg-9313871e56ad42e02fecf00fe45c8644.oggstr"
+
+[deps]
+
+source_file="res://dialogic/Menus/Menu_BackgroundMusic_Next to You.ogg"
+dest_files=[ "res://.import/Menu_BackgroundMusic_Next to You.ogg-9313871e56ad42e02fecf00fe45c8644.oggstr" ]
+
+[params]
+
+loop=true
+loop_offset=0

@@ -1,0 +1,128 @@
+[gd_scene load_steps=6 format=2]
+
+[ext_resource path="res://addons/dialogic/Example Assets/Fonts/NameFont.tres" type="DynamicFont" id=1]
+[ext_resource path="res://dialogic/Menus/DialogicMenus_SaveSlot.gd" type="Script" id=2]
+
+[sub_resource type="StyleBoxFlat" id=1]
+bg_color = Color( 0.0901961, 0.0901961, 0.0901961, 1 )
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[sub_resource type="Animation" id=2]
+resource_name = "hover"
+length = 0.2
+tracks/0/type = "value"
+tracks/0/path = NodePath("Panel/Image:rect_scale")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.2 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Vector2( 1, 1 ), Vector2( 1.05, 1.05 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("Panel/Image:modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.2 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Color( 0.521569, 0.662745, 0.933333, 0.556863 ), Color( 1, 1, 1, 0.72549 ) ]
+}
+
+[sub_resource type="Animation" id=3]
+resource_name = "hover"
+length = 0.2
+tracks/0/type = "value"
+tracks/0/path = NodePath("Panel/Image:rect_scale")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.2 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Vector2( 1, 1 ), Vector2( 1.05, 1.05 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("Panel/Image:modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.2 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Color( 0.521569, 0.662745, 0.933333, 0.556863 ), Color( 1, 1, 1, 0.72549 ) ]
+}
+
+[node name="SaveSlot" type="Control"]
+margin_right = 300.0
+margin_bottom = 180.0
+rect_min_size = Vector2( 300, 180 )
+script = ExtResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Panel" type="Panel" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+rect_clip_content = true
+mouse_filter = 2
+custom_styles/panel = SubResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Image" type="TextureRect" parent="Panel"]
+modulate = Color( 0.521569, 0.662745, 0.933333, 0.556863 )
+anchor_right = 1.0
+anchor_bottom = 1.0
+rect_pivot_offset = Vector2( 150, 90 )
+mouse_filter = 2
+expand = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="."]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -128.0
+margin_top = -26.5
+margin_right = 128.0
+margin_bottom = 26.5
+custom_fonts/font = ExtResource( 1 )
+text = "Savename"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="hoveranims" type="AnimationPlayer" parent="."]
+anims/hover = SubResource( 2 )
+
+[node name="hoveranims2" type="AnimationPlayer" parent="."]
+anims/hover = SubResource( 3 )
+
+[connection signal="gui_input" from="." to="." method="_on_SaveSlot_gui_input"]
+[connection signal="mouse_entered" from="." to="." method="_on_SaveSlot_mouse_entered"]
+[connection signal="mouse_exited" from="." to="." method="_on_SaveSlot_mouse_exited"]
