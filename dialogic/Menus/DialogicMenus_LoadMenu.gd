@@ -30,7 +30,7 @@ func update_saves() -> void:
 func load_slot() -> void:
 	MenusContainer.get_node("MenuMusic").playing = false
 	MenusContainer.resume_game()
-	var dialog = Dialogic.resume_from_save(current_selected_slot)
+	var dialog = Dialogic.start_from_save(current_selected_slot)
 	dialog.layer = 0
 	MenusContainer.add_game_node(dialog)
 	hide()

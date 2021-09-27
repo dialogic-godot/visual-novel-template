@@ -24,13 +24,15 @@ var do_fade_in := true
 ## The timeline to load when starting the scene
 export(String, "TimelineDropdown") var timeline: String
 ## Should we clear saved data (definitions and timeline progress) on start?
-export(bool) var reset_saves = true
+export(bool) var reset_saves = false
 ## Should we show debug information when running?
 export(bool) var debug_mode = true
 
 # Event end/start
 signal event_start(type, event)
 signal event_end(type)
+# Text Signals
+signal text_complete(text_data)
 # Timeline end/start
 signal timeline_start(timeline_name)
 signal timeline_end(timeline_name)
@@ -108,7 +110,9 @@ func load_config_files():
 	
 	# defintiions
 	if not Engine.is_editor_hint():
-		pass
+		if reset_saves:
+			Dialogic.reset_saves()
+		definitions = Dialogic.get_definitions()
 	else:
 		definitions = DialogicResources.get_default_definitions()
 	
@@ -161,8 +165,6 @@ func play_audio(name):
 
 func update_custom_events() -> void:
 	custom_events = {}
-	if not DialogicResources.get_settings_config().get_value('editor', 'use_custom_events', false):
-		return 
 	
 	var path:String = DialogicResources.get_working_directories()["CUSTOM_EVENTS_DIR"]
 	
@@ -221,9 +223,56 @@ func resize_main():
 		$TextBubble/TextureRect.rect_size.x = $TextBubble.rect_size.x
 		$TextBubble/ColorRect.rect_size.x = $TextBubble.rect_size.x
 	
-	$Options.rect_global_position = Vector2(0,0)
-	$Options.rect_size = reference
+	# Button positioning
+	var button_anchor = current_theme.get_value('buttons', 'anchor', 5)
+	var anchor_vertical = 1
+	var anchor_horizontal = 1
+	# OMG WHY IS TIHS NOT A MATCH I CAN'T BELIEVE YOU, WHY YOU DOING THIS TO ME
+	if button_anchor == 0:
+		anchor_vertical = 0
+		anchor_horizontal = 0
+	elif button_anchor == 1:
+		anchor_vertical = 0
+	elif button_anchor == 2:
+		anchor_vertical = 0
+		anchor_horizontal = 2
+	# Number skip because of the separator
+	elif button_anchor == 4:
+		anchor_horizontal = 0
+	elif button_anchor == 6:
+		anchor_horizontal = 2
+	# Number skip because of the separator
+	elif button_anchor == 8:
+		anchor_vertical = 2
+		anchor_horizontal = 0
+	elif button_anchor == 9:
+		anchor_vertical = 2
+	elif button_anchor == 10:
+		anchor_vertical = 2
+		anchor_horizontal = 2
 	
+	var theme_choice_offset = current_theme.get_value('buttons', 'offset', Vector2(0,0))
+	var position_offset = Vector2(0,0)
+	
+	if anchor_horizontal == 0:
+		position_offset.x = (reference.x / 2) * -1
+	elif anchor_horizontal == 1:
+		position_offset.x = 0
+	elif anchor_horizontal == 2:
+		position_offset.x = (reference.x / 2)
+
+	if anchor_vertical == 0:
+		position_offset.y -= (reference.y / 2)
+	elif anchor_vertical == 1:
+		position_offset.y += 0
+	elif anchor_vertical == 2:
+		position_offset.y += (reference.y / 2)
+	
+	$Options.rect_global_position = Vector2(0,0) + theme_choice_offset + position_offset
+	$Options.rect_size = reference
+
+	
+	# Background positioning
 	var background = get_node_or_null('Background')
 	if background != null:
 		background.rect_size = reference
@@ -424,10 +473,6 @@ func _should_show_glossary():
 func parse_definitions(text: String, variables: bool = true, glossary: bool = true):
 	var final_text: String = text
 	if not preview:
-		if get_tree().has_meta('definitions'):
-			definitions = get_tree().get_meta('definitions')
-		if definitions == null:
-			definitions = {}
 		definitions = Dialogic.get_definitions()
 	if variables:
 		final_text = _insert_variable_definitions(text)
@@ -520,6 +565,7 @@ func update_text(text: String) -> String:
 
 func _on_text_completed():
 	play_audio('waiting')
+	emit_signal('text_complete', current_event)
 	
 	finished = true
 	
@@ -554,11 +600,8 @@ func _on_letter_written():
 
 func on_timeline_start():
 	if not Engine.is_editor_hint():
-		if settings.get_value('saving', 'save_definitions_on_start', true):
-			Dialogic.save_definitions()
-			pass
-		if settings.get_value('saving', 'save_current_timeline', true):
-			Dialogic.set_current_timeline(current_timeline)
+		if settings.get_value('saving', 'autosave_on_timeline_start', true):
+			Dialogic.save_current_info('', true)
 	# TODO remove event_start in 2.0
 	emit_signal("event_start", "timeline", current_timeline)
 	emit_signal("timeline_start", current_timeline)
@@ -566,11 +609,8 @@ func on_timeline_start():
 
 func on_timeline_end():
 	if not Engine.is_editor_hint():
-		if settings.get_value('saving', 'save_definitions_on_end', true):
-			Dialogic.save_definitions()
-			pass
-		if settings.get_value('saving', 'clear_current_timeline', true):
-			Dialogic.set_current_timeline('')
+		if settings.get_value('saving', 'autosave_on_timeline_end', true):
+			Dialogic.save_current_info('', true)
 	# TODO remove event_end in 2.0
 	emit_signal("event_end", "timeline")
 	emit_signal("timeline_end", current_timeline)
@@ -803,9 +843,6 @@ func event_handler(event: Dictionary):
 			if value != '':
 				background = Background.instance()
 				add_child(background)
-				call_deferred('resize_main') # Executing the resize main to update the background size
-			else:
-				background.texture = null
 				if (event['background'].ends_with('.tscn')):
 					var bg_scene = load(event['background'])
 					bg_scene = bg_scene.instance()
@@ -817,7 +854,7 @@ func event_handler(event: Dictionary):
 					background.create_tween()
 					background.fade_in(fade_time)
 				call_deferred('resize_main') # Executing the resize main to update the background size
-
+			
 			_load_next_event()
 		# Close Dialog event
 		'dialogic_022':
@@ -1286,6 +1323,9 @@ func fade_in_dialog(default = 0.5):
 		if transition_time > 0:
 			var tween = Tween.new()
 			add_child(tween)
+			# The tween created ('fade_in_tween_show_time') is also reference for the $TextBubble
+			# node to know if it should start showing up the letters of the dialog or not.
+			tween.name = 'fade_in_tween_show_time'
 			tween.interpolate_property($TextBubble, "modulate",
 				$TextBubble.modulate, Color(1,1,1,1), transition_time,
 				Tween.TRANS_LINEAR, Tween.EASE_IN_OUT)
@@ -1343,7 +1383,7 @@ func get_current_state_info():
 	# visible characters:
 	state["portraits"] = []
 	for portrait in $Portraits.get_children():
-		state['portraits'].append({"position": portrait.current_position, "character":portrait.current_character, "portrait":portrait.current_portrait, "mirror": portrait.currently_mirrored})
+		state['portraits'].append(portrait.current_state)
 
 	# background music:
 	state['background_music'] = $FX/BackgroundMusic.get_current_info()

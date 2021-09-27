@@ -37,7 +37,7 @@ func update_saves() -> void:
 # will save the current state to a new save slot
 func new_save_slot(slot_name:String) -> void:
 	slot_name = 'Save '+str(save_idx)
-	Dialogic.save_current_state(slot_name)
+	Dialogic.save_current_info(slot_name)
 	MenusContainer.saved_image.save_png("user://dialogic/"+slot_name+"/thumbnail.png")
 	update_saves()
 	MenusContainer.current_saved = true
@@ -54,7 +54,7 @@ func _ready():
 func on_save_slot_pressed(slot_name:String) -> void:
 	if not Dialogic.has_current_dialog_node(): return
 	
-	Dialogic.save_current_state(slot_name)
+	Dialogic.save_current_info(slot_name)
 	
 	MenusContainer.saved_image.save_png("user://dialogic/"+slot_name+"/thumbnail.png")
 	update_saves()
