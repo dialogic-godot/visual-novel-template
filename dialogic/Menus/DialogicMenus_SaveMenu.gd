@@ -20,7 +20,7 @@ func update_saves() -> void:
 	for child in SaveSlotContainer.get_children():
 		child.queue_free()
 	save_name = ""
-	for save in Dialogic.get_save_names_array():
+	for save in Dialogic.get_slot_names():
 		var x = SaveSlot.instance()
 		x.set_name(save)
 		SaveSlotContainer.add_child(x)
@@ -37,7 +37,7 @@ func update_saves() -> void:
 # will save the current state to a new save slot
 func new_save_slot(slot_name:String) -> void:
 	slot_name = 'Save '+str(save_idx)
-	Dialogic.save_current_info(slot_name)
+	Dialogic.save(slot_name)
 	MenusContainer.saved_image.save_png("user://dialogic/"+slot_name+"/thumbnail.png")
 	update_saves()
 	MenusContainer.current_saved = true
@@ -54,7 +54,7 @@ func _ready():
 func on_save_slot_pressed(slot_name:String) -> void:
 	if not Dialogic.has_current_dialog_node(): return
 	
-	Dialogic.save_current_info(slot_name)
+	Dialogic.save(slot_name)
 	
 	MenusContainer.saved_image.save_png("user://dialogic/"+slot_name+"/thumbnail.png")
 	update_saves()

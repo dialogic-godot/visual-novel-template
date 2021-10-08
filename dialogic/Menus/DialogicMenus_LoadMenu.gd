@@ -19,9 +19,9 @@ func open() -> void:
 func update_saves() -> void:
 	for child in SaveSlotContainer.get_children():
 		child.queue_free()
-	for save in Dialogic.get_save_names_array():
+	for slot_name in Dialogic.get_slot_names():
 		var x = SaveSlot.instance()
-		x.set_name(save)
+		x.set_name(slot_name)
 		SaveSlotContainer.add_child(x)
 		x.connect("pressed", self, "save_slot_pressed")
 		x.connect("delete_requested", self , "save_slot_delete_request")
@@ -30,8 +30,9 @@ func update_saves() -> void:
 func load_slot() -> void:
 	MenusContainer.get_node("MenuMusic").playing = false
 	MenusContainer.resume_game()
-	var dialog = Dialogic.start_from_save(current_selected_slot)
-	dialog.layer = 0
+	
+	Dialogic.load(current_selected_slot)
+	var dialog = Dialogic.start()
 	MenusContainer.add_game_node(dialog)
 	hide()
 
@@ -57,5 +58,5 @@ func save_slot_delete_request(save_slot_name:String) -> void:
 
 # will delete the currently selected save slot
 func delete_save_slot() -> void:
-	Dialogic.erase_save(current_selected_slot)
+	Dialogic.erase_slot(current_selected_slot)
 	update_saves()

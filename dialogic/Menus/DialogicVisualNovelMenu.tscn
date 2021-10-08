@@ -150,7 +150,7 @@ tracks/0/keys = {
 
 [sub_resource type="Animation" id=15]
 resource_name = "reset"
-length = 0.1
+length = 0.05
 tracks/0/type = "value"
 tracks/0/path = NodePath(".:modulate")
 tracks/0/interp = 1
@@ -177,6 +177,13 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 mouse_filter = 2
 theme = SubResource( 8 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="BG" type="ColorRect" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -239,6 +246,7 @@ text = "Settings"
 flat = true
 
 [node name="SubMenus" type="Control" parent="Menus/MenuContainer"]
+visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 script = ExtResource( 5 )

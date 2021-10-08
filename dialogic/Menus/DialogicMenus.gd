@@ -65,10 +65,10 @@ func _input(event):
 ################################################################################
 
 func _on_game_ended(_something):
-	yield(get_tree().create_timer(0.2), "timeout")
+	$MainMenu.open()
 	$MenuMusic.play()
 	$MenuAnimations.play_backwards("Fade")
-	$MainMenu.open()
+	yield(get_tree().create_timer(0.2), "timeout")
 	show()
 
 func _on_Ingame_Save_Button_pressed():

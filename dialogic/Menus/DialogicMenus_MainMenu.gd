@@ -8,6 +8,7 @@ export(String) var starting_timeline = "1. Introduction"
 
 func open():
 	show()
+	yield(get_tree().create_timer(0.2), "timeout")
 	$Buttons/NewGame_Button.grab_focus()
 
 ################################################################################
@@ -22,6 +23,7 @@ func _on_NewGame_Button_pressed():
 	var dialog = Dialogic.start(starting_timeline)
 	dialog.layer = 0
 	get_parent().add_game_node(dialog)
+	$Buttons/NewGame_Button.release_focus()
 
 func _on_LoadGame_Button_pressed():
 	hide()
