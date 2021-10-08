@@ -1,7 +1,8 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://addons/dialogic/Example Assets/Fonts/NameFont.tres" type="DynamicFont" id=1]
 [ext_resource path="res://dialogic/Menus/DialogicMenus_SaveSlot.gd" type="Script" id=2]
+[ext_resource path="res://addons/dialogic/Example Assets/Fonts/DefaultFont.tres" type="DynamicFont" id=3]
 
 [sub_resource type="StyleBoxFlat" id=1]
 bg_color = Color( 0.0901961, 0.0901961, 0.0901961, 1 )
@@ -18,7 +19,7 @@ corner_radius_bottom_left = 5
 resource_name = "hover"
 length = 0.2
 tracks/0/type = "value"
-tracks/0/path = NodePath("Panel/Image:rect_scale")
+tracks/0/path = NodePath("Panel/Border/Image:rect_scale")
 tracks/0/interp = 2
 tracks/0/loop_wrap = true
 tracks/0/imported = false
@@ -30,7 +31,7 @@ tracks/0/keys = {
 "values": [ Vector2( 1, 1 ), Vector2( 1.05, 1.05 ) ]
 }
 tracks/1/type = "value"
-tracks/1/path = NodePath("Panel/Image:modulate")
+tracks/1/path = NodePath("Panel/Border/Image:modulate")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/imported = false
@@ -39,15 +40,15 @@ tracks/1/keys = {
 "times": PoolRealArray( 0, 0.2 ),
 "transitions": PoolRealArray( 1, 1 ),
 "update": 0,
-"values": [ Color( 0.521569, 0.662745, 0.933333, 0.556863 ), Color( 1, 1, 1, 0.72549 ) ]
+"values": [ Color( 0.901961, 0.72549, 0.960784, 0.556863 ), Color( 1, 1, 1, 0.72549 ) ]
 }
 
 [sub_resource type="Animation" id=3]
 resource_name = "hover"
 length = 0.2
 tracks/0/type = "value"
-tracks/0/path = NodePath("Panel/Image:rect_scale")
-tracks/0/interp = 2
+tracks/0/path = NodePath("Delete:self_modulate")
+tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/imported = false
 tracks/0/enabled = true
@@ -55,19 +56,7 @@ tracks/0/keys = {
 "times": PoolRealArray( 0, 0.2 ),
 "transitions": PoolRealArray( 1, 1 ),
 "update": 0,
-"values": [ Vector2( 1, 1 ), Vector2( 1.05, 1.05 ) ]
-}
-tracks/1/type = "value"
-tracks/1/path = NodePath("Panel/Image:modulate")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/keys = {
-"times": PoolRealArray( 0, 0.2 ),
-"transitions": PoolRealArray( 1, 1 ),
-"update": 0,
-"values": [ Color( 0.521569, 0.662745, 0.933333, 0.556863 ), Color( 1, 1, 1, 0.72549 ) ]
+"values": [ Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ) ]
 }
 
 [node name="SaveSlot" type="Control"]
@@ -89,12 +78,26 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Image" type="TextureRect" parent="Panel"]
-modulate = Color( 0.521569, 0.662745, 0.933333, 0.556863 )
+[node name="Border" type="Control" parent="Panel"]
 anchor_right = 1.0
 anchor_bottom = 1.0
-rect_pivot_offset = Vector2( 150, 90 )
+margin_left = 2.0
+margin_top = 2.0
+margin_right = -2.0
+margin_bottom = -2.0
+rect_clip_content = true
 mouse_filter = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Image" type="TextureRect" parent="Panel/Border"]
+modulate = Color( 1, 1, 1, 0.72549 )
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_top = 1.0
+rect_scale = Vector2( 1.05, 1.05 )
+rect_pivot_offset = Vector2( 150, 90 )
 expand = true
 __meta__ = {
 "_edit_use_anchors_": false
@@ -117,12 +120,31 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="Delete" type="Button" parent="."]
+anchor_left = 1.0
+anchor_right = 1.0
+margin_left = -35.0
+margin_top = 2.0
+margin_right = -6.0
+margin_bottom = 45.0
+custom_fonts/font = ExtResource( 3 )
+text = "X"
+flat = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Tween" type="Tween" parent="Delete"]
+
 [node name="hoveranims" type="AnimationPlayer" parent="."]
 anims/hover = SubResource( 2 )
 
-[node name="hoveranims2" type="AnimationPlayer" parent="."]
+[node name="deletehover" type="AnimationPlayer" parent="."]
 anims/hover = SubResource( 3 )
 
 [connection signal="gui_input" from="." to="." method="_on_SaveSlot_gui_input"]
 [connection signal="mouse_entered" from="." to="." method="_on_SaveSlot_mouse_entered"]
 [connection signal="mouse_exited" from="." to="." method="_on_SaveSlot_mouse_exited"]
+[connection signal="mouse_entered" from="Delete" to="." method="_on_Delete_mouse_entered"]
+[connection signal="mouse_exited" from="Delete" to="." method="_on_Delete_mouse_exited"]
+[connection signal="pressed" from="Delete" to="." method="_on_Delete_pressed"]

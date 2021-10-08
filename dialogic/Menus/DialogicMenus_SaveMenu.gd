@@ -22,7 +22,7 @@ func update_saves() -> void:
 	save_name = ""
 	for save in Dialogic.get_slot_names():
 		var x = SaveSlot.instance()
-		x.set_name(save)
+		x.set_name(save, false)
 		SaveSlotContainer.add_child(x)
 		save_name = save.trim_prefix("Save ")
 		if save_name.is_valid_integer():
@@ -30,7 +30,7 @@ func update_saves() -> void:
 		x.connect("pressed", self, "on_save_slot_pressed")
 	if Dialogic.has_current_dialog_node():
 		var x = SaveSlot.instance()
-		x.set_name("NEW SAVE SLOT")
+		x.set_name("NEW SAVE SLOT", false)
 		SaveSlotContainer.add_child(x)
 		x.connect("pressed", self, "new_save_slot")
 
