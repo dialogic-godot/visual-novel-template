@@ -38,6 +38,7 @@ func pause_game():
 	get_tree().paused = true
 
 func resume_game():
+	$SubMenus.current_menu = null
 	get_node(Game).show()
 	$MenuMusic.playing = false
 	get_tree().paused = false

@@ -26,9 +26,9 @@ func update_saves() -> void:
 		x.connect("pressed", self, "save_slot_pressed")
 		x.connect("delete_requested", self , "save_slot_delete_request")
 
+
 # will load the currently selected slot
 func load_slot() -> void:
-	MenusContainer.get_node("MenuMusic").playing = false
 	MenusContainer.resume_game()
 	
 	Dialogic.load(current_selected_slot)
