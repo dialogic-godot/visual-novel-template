@@ -246,7 +246,6 @@ text = "Settings"
 flat = true
 
 [node name="SubMenus" type="Control" parent="Menus/MenuContainer"]
-visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 script = ExtResource( 5 )
@@ -285,7 +284,6 @@ __meta__ = {
 }
 
 [node name="SaveMenu" type="Control" parent="Menus/MenuContainer/SubMenus/MenuContent"]
-visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_left = 9.0
@@ -319,7 +317,6 @@ __meta__ = {
 }
 
 [node name="LoadMenu" type="Control" parent="Menus/MenuContainer/SubMenus/MenuContent"]
-visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_left = 9.0
@@ -334,17 +331,17 @@ __meta__ = {
 [node name="Scroll" type="ScrollContainer" parent="Menus/MenuContainer/SubMenus/MenuContent/LoadMenu"]
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_left = 22.0
-margin_right = -23.0
-margin_bottom = -41.0
+margin_left = 26.0
+margin_right = -27.0
+margin_bottom = -1.0
 scroll_horizontal_enabled = false
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="SaveSlots" type="GridContainer" parent="Menus/MenuContainer/SubMenus/MenuContent/LoadMenu/Scroll"]
-margin_right = 611.0
-margin_bottom = 464.0
+margin_right = 603.0
+margin_bottom = 504.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 columns = 2
@@ -352,16 +349,8 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Label" type="Label" parent="Menus/MenuContainer/SubMenus/MenuContent/LoadMenu"]
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-margin_top = -37.0
-text = "Right-click saves to delete them."
-align = 1
-valign = 1
-
 [node name="SettingsMenu" type="Control" parent="Menus/MenuContainer/SubMenus/MenuContent"]
+visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_left = 9.0
@@ -572,6 +561,7 @@ __meta__ = {
 }
 
 [node name="MainMenu" type="Control" parent="Menus/MenuContainer"]
+visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 script = ExtResource( 8 )
