@@ -103,6 +103,8 @@ HSlider/styles/slider = SubResource( 7 )
 
 [sub_resource type="DynamicFont" id=9]
 size = 20
+outline_size = 1
+outline_color = Color( 0.627451, 0.627451, 0.627451, 1 )
 font_data = ExtResource( 13 )
 
 [sub_resource type="Theme" id=10]
@@ -134,7 +136,7 @@ thickness = 3
 
 [sub_resource type="Animation" id=14]
 resource_name = "Fade"
-length = 0.5
+length = 0.3
 tracks/0/type = "value"
 tracks/0/path = NodePath(".:modulate")
 tracks/0/interp = 2
@@ -142,7 +144,7 @@ tracks/0/loop_wrap = true
 tracks/0/imported = false
 tracks/0/enabled = true
 tracks/0/keys = {
-"times": PoolRealArray( 0, 0.5 ),
+"times": PoolRealArray( 0, 0.3 ),
 "transitions": PoolRealArray( 1, 1 ),
 "update": 0,
 "values": [ Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0 ) ]
@@ -225,27 +227,35 @@ __meta__ = {
 }
 
 [node name="Save_Button" type="Button" parent="Menus/MenuContainer/InGameMenu"]
-margin_left = 421.0
-margin_right = 458.0
+margin_left = 382.0
+margin_right = 419.0
 margin_bottom = 32.0
 text = "Save"
 flat = true
 
 [node name="Load_Button" type="Button" parent="Menus/MenuContainer/InGameMenu"]
-margin_left = 478.0
-margin_right = 517.0
+margin_left = 439.0
+margin_right = 478.0
 margin_bottom = 32.0
 text = "Load"
 flat = true
 
+[node name="History_Button" type="Button" parent="Menus/MenuContainer/InGameMenu"]
+margin_left = 498.0
+margin_right = 556.0
+margin_bottom = 32.0
+text = "History"
+flat = true
+
 [node name="Settings_Button" type="Button" parent="Menus/MenuContainer/InGameMenu"]
-margin_left = 537.0
-margin_right = 602.0
+margin_left = 576.0
+margin_right = 641.0
 margin_bottom = 32.0
 text = "Settings"
 flat = true
 
 [node name="SubMenus" type="Control" parent="Menus/MenuContainer"]
+visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 script = ExtResource( 5 )
@@ -546,8 +556,8 @@ __meta__ = {
 margin_top = 312.0
 margin_right = 220.0
 margin_bottom = 362.0
-custom_styles/separator = SubResource( 13 )
 custom_constants/separation = 50
+custom_styles/separator = SubResource( 13 )
 
 [node name="ResumeGame_Button" type="Button" parent="Menus/MenuContainer/SubMenus/Buttons"]
 margin_top = 366.0
@@ -561,7 +571,6 @@ __meta__ = {
 }
 
 [node name="MainMenu" type="Control" parent="Menus/MenuContainer"]
-visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 script = ExtResource( 8 )
@@ -668,6 +677,7 @@ __meta__ = {
 }
 
 [node name="MenuAnimations" type="AnimationPlayer" parent="Menus/MenuContainer"]
+autoplay = "reset"
 anims/Fade = SubResource( 14 )
 anims/reset = SubResource( 15 )
 
@@ -830,6 +840,7 @@ autoplay = true
 
 [connection signal="pressed" from="Menus/MenuContainer/InGameMenu/Save_Button" to="Menus/MenuContainer" method="_on_Ingame_Save_Button_pressed"]
 [connection signal="pressed" from="Menus/MenuContainer/InGameMenu/Load_Button" to="Menus/MenuContainer" method="_on_Ingame_Load_Button_pressed"]
+[connection signal="pressed" from="Menus/MenuContainer/InGameMenu/History_Button" to="Menus/MenuContainer" method="_on_Ingame_History_Button_pressed"]
 [connection signal="pressed" from="Menus/MenuContainer/InGameMenu/Settings_Button" to="Menus/MenuContainer" method="_on_Ingame_Settings_Button_pressed"]
 [connection signal="item_selected" from="Menus/MenuContainer/SubMenus/MenuContent/SettingsMenu/HBox/VBox/Display/DisplaySelect" to="Menus/MenuContainer/SubMenus/MenuContent/SettingsMenu" method="_on_DisplaySelect_item_selected"]
 [connection signal="value_changed" from="Menus/MenuContainer/SubMenus/MenuContent/SettingsMenu/HBox/VBox/OverallVolume/Slider" to="Menus/MenuContainer/SubMenus/MenuContent/SettingsMenu" method="_on_Slider_value_changed"]

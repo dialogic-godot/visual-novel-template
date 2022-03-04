@@ -1391,7 +1391,7 @@ func fade_in_dialog(time = 0.5):
 	var has_tween = false
 	
 	if Engine.is_editor_hint() == false:
-		if dialog_faded_in_already == false:
+		if dialog_faded_in_already == false and do_fade_in:
 			var tween = Tween.new()
 			add_child(tween)
 			# The tween created ('fade_in_tween_show_time') is also reference for the $TextBubble
@@ -1449,7 +1449,7 @@ func resume_state_from_info(state_info):
 	# wait until the dialog node was added to the tree
 	do_fade_in = false
 	yield(self, "ready")
-	#print(state_info)
+	print(state_info)
 
 
 

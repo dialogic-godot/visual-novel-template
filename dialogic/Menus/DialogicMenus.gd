@@ -15,14 +15,17 @@ var current_saved = false
 ################################################################################
 
 func add_game_node(node):
+	print('adds_game')
 	stop_previous_game()
+	$InGameMenu.hide()
 	$MenuAnimations.play("Fade")
 	get_node(Game).add_child(node)
 	node.connect("timeline_end", self, "_on_game_ended")
 	yield($MenuAnimations, "animation_finished")
+	$InGameMenu.show()
 	$MainMenu.hide()
 	$SubMenus.hide()
-	$MenuAnimations.play("reset")
+	$MenuAnimations.play_backwards("Fade")
 
 func stop_previous_game() -> void:
 	for child in get_node(Game).get_children():
@@ -73,6 +76,7 @@ func _on_game_ended(_something):
 	show()
 
 func _on_Ingame_Save_Button_pressed():
+	get_tree().set_input_as_handled()
 	# Retrieve the save screenshot
 	saved_image = get_tree().get_root().get_texture().get_data()
 	saved_image.flip_y()
@@ -82,6 +86,7 @@ func _on_Ingame_Save_Button_pressed():
 
 
 func _on_Ingame_Load_Button_pressed():
+	get_tree().set_input_as_handled()
 	# Retrieve the save screenshot
 	saved_image = get_tree().get_root().get_texture().get_data()
 	saved_image.flip_y()
@@ -91,9 +96,15 @@ func _on_Ingame_Load_Button_pressed():
 
 
 func _on_Ingame_Settings_Button_pressed():
+	get_tree().set_input_as_handled()
 	# Retrieve the save screenshot
 	saved_image = get_tree().get_root().get_texture().get_data()
 	saved_image.flip_y()
 	
 	pause_game()
 	$SubMenus.open_settings_menu()
+
+
+func _on_Ingame_History_Button_pressed():
+	get_tree().set_input_as_handled()
+	Dialogic.toggle_history()

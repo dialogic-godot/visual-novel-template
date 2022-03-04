@@ -81,13 +81,11 @@ samples = [ ExtResource( 9 ) ]
 random_strategy = 2
 
 [node name="Hovering" type="AudioStreamPlayer" parent="FX/Audio"]
-pitch_scale = 0.0001
 script = ExtResource( 8 )
 samples = [ ExtResource( 9 ) ]
 random_strategy = 2
 
 [node name="Selecting" type="AudioStreamPlayer" parent="FX/Audio"]
-pitch_scale = 0.0001
 script = ExtResource( 8 )
 samples = [ ExtResource( 9 ) ]
 random_strategy = 2
