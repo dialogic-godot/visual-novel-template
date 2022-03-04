@@ -1,3 +1,4 @@
-# My resolution is too small and the dialog is too big. Help!
+# Text box to big?
 
-If you are setting the resolution of your game to a very small value, you will have to create a theme in Dialogic and pick a smaller font and make the box size of the Dialog Box smaller as well.
+**My resolution is too small and my dialog box is too big. Help!**
+The scale of dialogue boxes and text are set in the Theme selected for the project. If your resolution is too small, the default one may be too big. Create a new theme and make the box and text sizes smaller until it fits appropriately.

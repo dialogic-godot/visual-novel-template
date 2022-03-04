@@ -74,7 +74,8 @@ static func get_working_directories() -> Dictionary:
 		'TIMELINE_DIR': RESOURCES_DIR + "/timelines",
 		'THEME_DIR': RESOURCES_DIR + "/themes",
 		'CHAR_DIR': RESOURCES_DIR + "/characters",
-		'CUSTOM_EVENTS_DIR': RESOURCES_DIR + "/custom-events"
+		'CUSTOM_EVENTS_DIR': RESOURCES_DIR + "/custom-events",
+		'SOUNDS':RESOURCES_DIR + "/sounds"
 	}
 
 
@@ -237,7 +238,7 @@ static func get_theme_config(filename: String):
 		return config
 
 
-static func set_theme_value(filename, section, key, value):
+static func set_theme_value(filename:String, section:String, key:String, value):
 	# WARNING: For use in the editor only
 	var config = get_theme_config(filename)
 	config.set_value(section, key, value)
@@ -269,6 +270,11 @@ static func set_settings_value(section: String, key: String, value):
 	var config = get_settings_config()
 	config.set_value(section, key, value)
 	config.save(get_config_files_paths()['SETTINGS_FILE'])
+
+static func get_settings_value(section:String, key: String, default):
+	var config = get_settings_config()
+	return config.get_value(section, key, default)
+
 
 ## *****************************************************************************
 ##						DEFAULT DEFINITIONS
