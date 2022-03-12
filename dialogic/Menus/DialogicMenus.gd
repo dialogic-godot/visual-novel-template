@@ -15,7 +15,6 @@ var current_saved = false
 ################################################################################
 
 func add_game_node(node):
-	print('adds_game')
 	stop_previous_game()
 	$InGameMenu.hide()
 	$MenuAnimations.play("Fade")

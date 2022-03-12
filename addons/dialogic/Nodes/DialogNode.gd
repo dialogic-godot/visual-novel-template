@@ -1449,7 +1449,7 @@ func resume_state_from_info(state_info):
 	# wait until the dialog node was added to the tree
 	do_fade_in = false
 	yield(self, "ready")
-	print(state_info)
+	#print(state_info)
 
 
 
