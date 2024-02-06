@@ -1,4 +1,80 @@
 # Changelog
+## v1.5.1
+* Fixed a bug that prevented directories from being created on Android exports [[WolfgangSenff](https://github.com/WolfgangSenff)]
+* Fixed a bug [#1935](https://github.com/coppolaemilio/dialogic/issues/1935) where the creation buttons wouldn't function if a folder wasn't selected first [[zaknafean](https://github.com/zaknafean)]
+* Fixed a bug [#1644](https://github.com/coppolaemilio/dialogic/issues/1644) and [#1343](https://github.com/coppolaemilio/dialogic/issues/1343) where character leaves history logging could not be disabled.
+* Themes can now properly duplicate
+* Choice button styles no longer 'randomly' revert
+* Commands will no longer show up in the history screen [#1709](https://github.com/coppolaemilio/dialogic/issues/1709)
+* Unused 'random text' will no longer show up in the history screen [#1710](https://github.com/coppolaemilio/dialogic/issues/1710)
+* Goto Anchors (labels) are now uniquely ID'd [#1119](https://github.com/coppolaemilio/dialogic/issues/1119). If you have labels that do not show up in your goto event, just hit the 'regenerate' button ![image](https://github.com/coppolaemilio/dialogic/assets/7741797/4c9c50c4-4a4d-4f56-b4f4-f90e1c4cd19c)
+* Fixed a bug that broke PCK encrypted games using Dialogic. [[TheMeddlingMechanic](https://github.com/TheMeddlingMechanic)]
+
+
+## v1.5.0
+* The entire file structure has been changed to use dictionaries keyed to the 'folder path', removing vast amounts of looping and drastically increasing editor speed for large projects with many nested folders [[Exelia](https://github.com/exelia-antonov)]
+* timeline_end and timeline_start properly return name of timelines when a Change Timeline Event occurs [[zaknafean](https://github.com/zaknafean)]
+* timeline_changed signal added. Emitted during a Change Timeline Event, returns old_timeline_name and new_timeline_name
+* portrait_changed signal added. Emitted whenever a new portrait takes focus. Returns a reference to the portrait.
+* Name Label aligns properly when name sizes vary
+* Un-hard coded the position offsets for the character positions. They now are relative to the viewport. Thanks @rretureau for the work 1000 commits ago!
+* Changing the DB value in an audio event no longer overwrites the value in the Audio Bus. It now adjusts the current value instead.
+* Added better support for adding variables to already published games #1278 [[Iodine](https://github.com/Iodinex64)]
+* Added option in themes to show 'disabled' choices [[Celthim](https://github.com/celthim)]
+* Fixed crashes related to using 'anima' animations with custom portrait nodes
+
+## v1.4.5
+* Added focus style options for themes [[CptFubar](https://github.com/CptFubar)]
+* Fixed a broken font reference [[todd-koeck](https://github.com/todd-koeck)]
+* Fix for Nameplate being unaligned [[meyaoigames](https://github.com/meyaoigames)]
+* Fix crash if theme is missing on character file [[thebardsrc](https://github.com/thebardsrc)]
+
+## v1.4.4
+* Added no skip event [[zaknafean](https://github.com/zaknafean)]
+* Added auto-advance mode [[zaknafean](https://github.com/zaknafean)]
+* Translation Service Speed fixes by [[thebardsrc](https://github.com/thebardsrc)] in https://github.com/coppolaemilio/dialogic/pull/995
+* Fixed some Anima bugs [[zaknafean](https://github.com/zaknafean)]
+
+## v1.4.3 
+
+The biggest changes in this version are fixes to a bug when exporting the games. Thank you everyone!
+
+## What's Changed
+* Update Chinese Translation by @magian1127 in https://github.com/coppolaemilio/dialogic/pull/920
+* 1.4: Added simple slide_in character entrance animations by @champbob in https://github.com/coppolaemilio/dialogic/pull/945
+* 1.4: Added simple slide_out character entrance animations by @champbob in https://github.com/coppolaemilio/dialogic/pull/946
+* Fix multi-line code by @lemon37564 in https://github.com/coppolaemilio/dialogic/pull/970
+* 1.4.3 - Fix for export error due to settings theme failure by @zaknafean in https://github.com/coppolaemilio/dialogic/pull/978
+* 1.4.3 - Fix for #904 by @zaknafean in https://github.com/coppolaemilio/dialogic/pull/979
+
+## New Contributors
+* @champbob made their first contribution in https://github.com/coppolaemilio/dialogic/pull/945
+* @lemon37564 made their first contribution in https://github.com/coppolaemilio/dialogic/pull/970
+
+**Full Changelog**: https://github.com/coppolaemilio/dialogic/compare/1.4.2...1.4.3
+
+## v1.4.2 - Afterlife
+- Fixed an issue with MacOS and text events not adjusting their size properly
+- Android exports should work again [[zaknafean](https://github.com/zaknafean)]
+- Add setting to disable the mouse block of the dialog node [[Jowan-Spooner](https://github.com/Jowan-Spooner)]
+- Default settings adjustments [[zaknafean](https://github.com/zaknafean)]
+  - Fixed the 'default' setting not appearing after you set it for hotkey choices
+  - Fixed hotkey choice settings layout
+  - Changed the default status of autofocus from true to false
+- A basic touch to advance implementation (#876) [[zaknafean](https://github.com/zaknafean)]
+- Added support for 9-patch rectangles for Dialog Box textures (#286) [[zaknafean](https://github.com/zaknafean)]
+- Added finer controls to Text and Box positions (#761) [[lamsorsen](https://github.com/lamsorsen)]
+  - **Box margin** replaced with **Margin** for the DialogBox settings
+  - **Box Padding** has been removed from the DialogBox settings, and replaced with **Margin**  for the Dialog Text setting to clear up confusion
+  - The margin Top/Bottom and Left/Right are no longer linked, and can be individually adjusted
+  - **Please note this change may break some existing themes**
+- Added option to recenter character portraits automatically [[thebardsrc](https://github.com/thebardsrc)]
+
+
+## v1.4.1 - Animations hotfix
+- Portrait-Animation fixes:
+  Because the animations should work both with Controls and Node2Ds, just using node.scale won't work. Now they all use DialogicAnimaPropertiesHelper.get_scale(node), which will automatically use the correct one. [[Jowan-Spooner](https://github.com/Jowan-Spooner)]. Thanks a lot to @[zaknafean](https://github.com/zaknafean)
+
 
 ## v1.4 - Curves Ahead
 #### Events
@@ -6,8 +82,9 @@
 - New events: `Label Event` and `Go to Event`. This will help you creating an anchor position to go back to.[[Jowan-Spooner](https://github.com/Jowan-Spooner)]
 - Text event improvements:
   - You can now make a list of words like this: `[word1,word2,word3]` and Dialogic will pick a random word from the list. If the word is a Dialogic variable name and it gets picked it will show the value of that variable.
-  - New commands [signal=argument], [pause=wait_time], [play=soundname], [nv=v] (for waiting until the audio finishes) added to the Text Event [[KvaGram](https://github.com/KvaGram)]
+  - New commands [signal=argument], [pause=wait_time], [play=soundname], [nw=v] (for waiting until the audio finishes) added to the Text Event [[KvaGram](https://github.com/KvaGram)]
 - The Character Join and Character Leave events have been removed in favor of the new `Character Event`. They will be converted automatically. The new events allows for more customization including animations. These use the anima system. Learn more about the [event](./Events/002.md) and the [animations](./Tutorials/AddNewAnimations.md) [[Jowan-Spooner](https://github.com/Jowan-Spooner)]
+- The `Call Node Event` now sends arguments instead of a single array. If you were using it in one of your timelines you will need to update the functions you are calling to accommodate this. [[AnidemDex](https://github.com/AnidemDex)]
 
 
 #### Settings/Themes
@@ -17,6 +94,7 @@
   - Removed the setting to dim character portraits from the global settings
   - Added a setting to control the dim speed [[thebardsrc](https://github.com/thebardsrc)]
 - You can now set a `custom theme per character` [[Jowan-Spooner](https://github.com/Jowan-Spooner)]
+- Added a setting for behavior to re-center the portrait each time it's changed from a text event. This fixes a number of portrait issues and is enabled by default, but is a BREAKING change, so please remember to disable this if you need the old behavior. [[thebardsrc](https://github.com/thebardsrc)]
 - New setting to use "Keep Aspect Centered" instead of stretch for the Background event [[Jowan-Spooner](https://github.com/Jowan-Spooner)]
 - You can now vertically align the text in the dialog box [[Jowan-Spooner](https://github.com/Jowan-Spooner)]
 - You can now specify hotkeys for the choices or use default hot-keys (1-9) [[zaknafean](https://github.com/zaknafean)]
@@ -49,6 +127,7 @@
 - You can now use regular hotkeys in Mac using the `Command` key [[Jowan-Spooner](https://github.com/Jowan-Spooner)]
 - Anima added to handle character animations [[Jowan-Spooner](https://github.com/Jowan-Spooner)]
 - Many minor and major bugs fixed
+- Animation can be used on custom portrait scenes [[bitbrain](https://github.com/bitbrain)]
 
 
 ## v1.3 - Save me some time

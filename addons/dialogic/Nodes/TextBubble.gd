@@ -20,7 +20,7 @@ var _finished := false
 var _theme
 
 signal text_completed()
-signal letter_written()
+signal letter_written(lastLetter)
 signal signal_request(arg)
 
 ## *****************************************************************************
@@ -35,16 +35,22 @@ func update_name(name: String, color: Color = Color.white, autocolor: bool=false
 		return
 	
 	if not name.empty():
-		name_label.visible = true
+		
 		# Hack to reset the size
 		name_label.rect_min_size = Vector2(0, 0)
 		name_label.rect_size = Vector2(-1, 40)
+		
 		# Setting the color and text
 		name_label.text = name
+		
+		name_label.rect_size = name_label.get_font("font").get_string_size(name_label.text)
+		name_label.rect_min_size = name_label.get_font("font").get_string_size(name_label.text)
 		# Alignment
 		call_deferred('align_name_label')
 		if autocolor:
 			name_label.set('custom_colors/font_color', color)
+		
+		name_label.visible = true
 	else:
 		name_label.visible = false
 
@@ -103,6 +109,7 @@ func update_text(text:String):
 	# for this reason the RichTextLabel ist first set to just go for the size it needs,
 	# even if this might be more than available.
 	text_label.size_flags_vertical = 0
+	text_label.rect_clip_content = 0
 	text_label.fit_content_height = true
 	# a frame later, when the sizes have been updated, it will check if there 
 	# is enough space or the scrollbar should be activated.
@@ -198,11 +205,10 @@ func load_theme(theme: ConfigFile):
 	theme_text_speed = text_speed
 
 	# Margin
-	var text_margin = theme.get_value('text', 'margin', Vector2(20, 10))
-	text_container.set('margin_left', text_margin.x)
-	text_container.set('margin_right', text_margin.x * -1)
-	text_container.set('margin_top', text_margin.y)
-	text_container.set('margin_bottom', text_margin.y * -1)
+	text_container.set('margin_left', theme.get_value('text', 'text_margin_left', 20))
+	text_container.set('margin_right', theme.get_value('text', 'text_margin_right', -20))
+	text_container.set('margin_top', theme.get_value('text', 'text_margin_top', 10))
+	text_container.set('margin_bottom', theme.get_value('text', 'text_margin_bottom', -10))
 
 	# Backgrounds
 	$TextureRect.texture = DialogicUtil.path_fixer_load(theme.get_value('background','image', "res://addons/dialogic/Example Assets/backgrounds/background-2.png"))
@@ -215,6 +221,11 @@ func load_theme(theme: ConfigFile):
 
 	$ColorRect.visible = theme.get_value('background', 'use_color', false)
 	$TextureRect.visible = theme.get_value('background', 'use_image', true)
+	$TextureRect.visible = theme.get_value('background', 'use_image', true)
+	$TextureRect.patch_margin_left = theme.get_value('ninepatch', 'ninepatch_margin_left', 0)
+	$TextureRect.patch_margin_right = theme.get_value('ninepatch', 'ninepatch_margin_right', 0)
+	$TextureRect.patch_margin_top = theme.get_value('ninepatch', 'ninepatch_margin_top', 0)
+	$TextureRect.patch_margin_bottom = theme.get_value('ninepatch', 'ninepatch_margin_bottom', 0)
 
 	# Next image
 	$NextIndicatorContainer.rect_position = Vector2(0,0)
@@ -278,11 +289,11 @@ func _on_writing_timer_timeout():
 		if text_label.visible_characters > text_label.get_total_character_count():
 			_handle_text_completed()
 		elif (
-			text_label.visible_characters > 0 and 
+			text_label.visible_characters > 0 #and 
 			#text_label.text.length() > text_label.visible_characters-1 and 
-			text_label.text[text_label.visible_characters-1] != " "
+			#text_label.text[text_label.visible_characters-1] != " "
 		):
-			emit_signal('letter_written')
+			emit_signal('letter_written', text_label.text[text_label.visible_characters-1] )
 	else:
 		$WritingTimer.stop()
 
@@ -313,7 +324,7 @@ func align_name_label():
 		name_label.rect_global_position.x = rect_global_position.x + (rect_size.x / 2) - (label_size / 2) + horizontal_offset
 	elif name_label_position == 2: # Right
 		name_label.rect_global_position.x = rect_global_position.x + rect_size.x - label_size + horizontal_offset
-
+	
 ## *****************************************************************************
 ##								OVERRIDES
 ## *****************************************************************************

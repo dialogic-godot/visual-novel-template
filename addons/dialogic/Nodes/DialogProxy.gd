@@ -33,7 +33,11 @@ var _signals_to_copy = [
 	'text_complete',
 	'timeline_start',
 	'timeline_end',
-	'dialogic_signal'
+	'timeline_changed',
+	'dialogic_signal',
+	'letter_displayed',
+	'auto_advance_toggled',
+	'portrait_changed',
 ]
 ## -----------------------------------------------------------------------------
 ## 						SIGNALS (proxy copy of DialogNode signals)
@@ -46,5 +50,9 @@ signal text_complete(text_data)
 # Timeline end/start
 signal timeline_start(timeline_name)
 signal timeline_end(timeline_name)
+signal timeline_changed(old_timeline_name, new_timeline_name)
 # Custom user signal
 signal dialogic_signal(value)
+signal letter_displayed(lastLetter)
+signal auto_advance_toggled(toggleValue)
+signal portrait_changed(portrait_path)

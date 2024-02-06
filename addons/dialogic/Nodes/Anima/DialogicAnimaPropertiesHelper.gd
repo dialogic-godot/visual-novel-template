@@ -29,15 +29,22 @@ static func get_position(node: Node) -> Vector2:
 static func get_size(node: Node) -> Vector2:
 	if node is Control:
 		return node.get_size()
-	elif node is Node2D:
-		return node.texture.get_size() * node.scale
+	elif node is AnimatedSprite:
+		var frames = (node as AnimatedSprite).frames
+		var animation = (node as AnimatedSprite).animation
+		# scale can be negative
+		var scale =  Vector2(abs(node.scale.x), abs(node.scale.y))
+		return frames.get_frame(animation, 0).get_size() * scale
+	elif node is Node2D and "texture" in node:
+		# scale can be negative
+		var scale =  Vector2(abs(node.scale.x), abs(node.scale.y))
+		return node.texture.get_size() * scale
 
 	return Vector2.ZERO
 
 static func get_scale(node: Node) -> Vector2:
 	if node is Control:
 		return node.rect_scale
-	
 	return node.scale
 
 static func get_rotation(node: Node):
@@ -50,7 +57,11 @@ static func get_rotation(node: Node):
 
 static func set_2D_pivot(node: Node, pivot: int) -> void:
 	var size: Vector2 = get_size(node)
-
+	
+	# If node does not contain offset, just pivot from origin.
+	if node.get('offset') == null:
+		return
+	
 	match pivot:
 		PIVOT.TOP_CENTER:
 			if node is Control:
