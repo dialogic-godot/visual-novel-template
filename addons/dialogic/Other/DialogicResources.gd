@@ -327,9 +327,16 @@ static func delete_default_definition(id: String):
 static func get_saves_folders() -> Array:
 	var save_folders = []
 	var directory := Directory.new()
+	if (OS.get_name() == "HTML5"):
+		if (OS.has_feature("JavaScript")):	
+			directory.make_dir(WORKING_DIR)
+			print("get saves fold func: got working dir ", WORKING_DIR)
+		else:
+			printerr("JavaScript not enabled")
 	if directory.open(WORKING_DIR) != OK:
-		print("[D] Error: Failed to access working directory.")
-		return []
+		if not directory.make_dir(WORKING_DIR):
+			print("[D] Error: Failed to access working directory.")
+			return []
 	
 	directory.list_dir_begin()
 	var file_name = directory.get_next()
@@ -344,8 +351,9 @@ static func get_saves_folders() -> Array:
 static func add_save_folder(save_name: String) -> void:
 	var directory := Directory.new()
 	if directory.open(WORKING_DIR) != OK:
-		print("[D] Error: Failed to access working directory.")
-		return 
+		if not directory.make_dir(WORKING_DIR):
+			print("[D] Error: Failed to access working directory.")
+			return 
 	directory.make_dir(save_name)
 	
 	var file := File.new()
@@ -416,9 +424,51 @@ static func get_saved_definitions(save_name: String = '') -> Dictionary:
 		print("[D] Wasn't able to find save '"+save_name+"'. Loaded the default definitions.")
 		return get_default_definitions()
 	
-	return load_json(WORKING_DIR+"/"+save_name+"/definitions.json", {})
+#	return load_json(WORKING_DIR+"/"+save_name+"/definitions.json", {})
 
+	var default_definitions : Dictionary = get_default_definitions()
 
+	var saved_definitions : Dictionary = {}
+
+	if save_name == '':
+		saved_definitions = load_json(get_config_files_paths()['DEFINITIONS_DEFAULT_SAVE'], default_definitions)
+		print("empty save slot, loaded saved definition from default save definitions")
+
+	else:
+		saved_definitions = load_json(WORKING_DIR+"/"+save_name+"/definitions.json", {})
+		print("saved user definitions on ''user://'' loaded")
+	
+	# Store variables in arrays from saved and default data
+	var base_def_var = default_definitions.variables
+	var saved_user_def_var = saved_definitions.variables
+
+	#filler out depreciated variables
+	var distilled_saved_data: Array = []
+	for sd in saved_user_def_var:
+		var sd_id = sd.id
+		var bd_id
+		for bd in base_def_var:
+			bd_id = bd.id
+			if sd_id == bd_id:
+				distilled_saved_data.append (sd)
+
+	#adds missing new variables not in saved game
+	for dd in base_def_var:
+		var dd_id = dd.id
+		var sd_id
+		for sd in distilled_saved_data:
+			var sd_keys = sd.id
+			if dd_id == sd_keys:
+				sd_id = sd_keys
+		if dd_id == sd_id:
+			pass
+		else:
+			distilled_saved_data.append (dd)
+
+	#adds it back distilled data into main Saved Definitions
+	saved_definitions.variables = distilled_saved_data
+
+	return saved_definitions
 
 ## *****************************************************************************
 ##						FOLDER STRUCTURE
@@ -459,3 +509,88 @@ static func get_resource_folder_structure() -> Dictionary:
 
 static func save_resource_folder_structure(data):
 	set_json(get_config_files_paths()['FOLDER_STRUCTURE_FILE'], data)
+	
+static func get_resource_folder_flat_structure() -> Dictionary:
+	# Convert the folder structure from the JSON file into a simpler one that doesn't require recursive loops
+	var flat_structure = {}
+	flat_structure['Timelines'] = {}
+	flat_structure['Characters'] = {}
+	flat_structure['Definitions'] = {}
+	flat_structure['Themes'] = {}
+	
+	
+	var json_structure = get_resource_folder_structure()
+	
+	flat_structure = recursive_search("Timelines", json_structure["folders"]["Timelines"], "/", flat_structure)
+	flat_structure = recursive_search("Characters", json_structure["folders"]["Characters"], "/", flat_structure)
+	flat_structure = recursive_search("Definitions", json_structure["folders"]["Definitions"], "/", flat_structure)
+	flat_structure = recursive_search("Themes", json_structure["folders"]["Themes"], "/", flat_structure)
+	
+	return flat_structure
+	
+static func save_resource_folder_flat_structure(flat_tree) -> Dictionary:
+	# Convert the flat folder structure back into the nested dictionary to be able to save to JSON
+	var nested_structure = {}
+	nested_structure['files'] = []
+	nested_structure['folders'] = {}
+	nested_structure['folders']['Characters'] = {}
+	nested_structure['folders']['Definitions'] = {}
+	nested_structure['folders']['Themes'] = {}
+	nested_structure['folders']['Timelines'] = {}
+	
+	var structure_keys = {"Characters":"Characters", "Definitions":"Definitions", "Themes":"Themes", "Timelines":"Timelines"}
+	
+	
+	for key in structure_keys:
+		
+		var nested = {} 
+		nested['folders'] = {}
+		nested['files'] = []
+		for flat_key in flat_tree[key].keys():
+				nested = recursive_build(flat_key.right(1), flat_tree[key][flat_key], nested)
+		nested_structure['folders'][key] = nested	
+			
+	
+	set_json(get_config_files_paths()['FOLDER_STRUCTURE_FILE'], nested_structure)
+				
+		
+	
+	return {}
+	
+static func recursive_search(currentCheck, currentDictionary, currentFolder, structure_dictionary):
+	structure_dictionary[currentCheck][currentFolder + "."] = currentDictionary['metadata']
+	
+	for structureFolder in currentDictionary["folders"]:
+		recursive_search(currentCheck, currentDictionary["folders"][structureFolder], currentFolder + structureFolder + "/", structure_dictionary)
+		
+	for structureFile in currentDictionary["files"]:
+		match currentCheck:
+			"Timelines": structure_dictionary['Timelines'][structureFile] = currentFolder
+			"Characters":  structure_dictionary['Characters'][structureFile] = currentFolder
+			"Definitions":  structure_dictionary['Definitions'][structureFile] = currentFolder
+			"Themes":  structure_dictionary['Themes'][structureFile] = currentFolder
+	
+	return structure_dictionary
+
+static func recursive_build(build_path, meta, current_dictionary):
+	var passer = {}
+	passer['folders'] = {}
+	passer['files'] = []
+	if '/' in build_path: 
+		var current_step = build_path.split('/', true, 1)[0]
+		if !current_dictionary['folders'].has(current_step):
+			current_dictionary['folders'][current_step] = passer
+			
+		current_dictionary['folders'][current_step] = recursive_build(build_path.split('/', true, 1)[1], meta,current_dictionary['folders'][current_step])
+		
+		return current_dictionary		
+	else:
+		if build_path == ".":
+			current_dictionary['metadata'] = meta
+		else:
+			current_dictionary['files'].append(meta['file'])
+		
+		return current_dictionary
+		
+		
+

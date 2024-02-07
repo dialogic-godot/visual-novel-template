@@ -53,6 +53,8 @@ var id_to_scene_name = {
 	'dialogic_040':'EmitSignal',
 	'dialogic_041':'ChangeScene',
 	'dialogic_042':'CallNode',
+	#Afterlife
+	'dialogic_050':'NoSkipEvent',
 	}
 
 var event_data
@@ -795,23 +797,27 @@ func cancel_drop_event():
 # Adding an event to the timeline
 func create_event(event_id: String, data: Dictionary = {'no-data': true} , indent: bool = false, at_index: int = -1, auto_select: bool = false):
 	var piece = null
-	
 	# check if it's a custom event
 	if event_id in custom_events.keys():
 		piece = load(custom_events[event_id]['event_block_scene']).instance()
 	# check if it's a builtin event
 	elif event_id in id_to_scene_name.keys():
 		piece = load("res://addons/dialogic/Editor/Events/" + id_to_scene_name[event_id] + ".tscn").instance()
+#		var piece_name = "res://addons/dialogic/Editor/Events/" + id_to_scene_name[event_id] + ".tscn"
+#		if piece_name in editor_reference.editor_scene_cache:
+#			piece = editor_reference.editor_scene_cache[piece_name].instance()
+#		else:
+#			var scene_piece = load("res://addons/dialogic/Editor/Events/" + id_to_scene_name[event_id] + ".tscn")
+#			editor_reference.editor_scene_cache[piece_name] = scene_piece
+#			piece = scene_piece.instance()
 	# else use dummy event
 	else:
 		piece = load("res://addons/dialogic/Editor/Events/DummyEvent.tscn").instance()
 	
 	# load the piece with data
 	piece.editor_reference = editor_reference
-	
 	if data.has('no-data') == false:
 		piece.event_data = data
-	
 	if at_index == -1:
 		if len(selected_items) != 0:
 			timeline.add_child_below_node(selected_items[0], piece)
@@ -839,7 +845,7 @@ func create_event(event_id: String, data: Dictionary = {'no-data': true} , inden
 	return piece
 
 
-func load_timeline(filename: String):
+func load_timeline(filename: String): 
 	clear_timeline()
 	update_custom_events()
 	if timeline_file != filename:
@@ -862,6 +868,7 @@ func load_timeline(filename: String):
 	load_batch(batches)
 	# Reset the scroll position
 	$TimelineArea.scroll_vertical = 0
+	
 
 
 func batch_events(array, size, batch_number):
@@ -887,6 +894,7 @@ func _on_batch_loaded():
 		building_timeline = false
 		emit_signal("timeline_loaded")
 	add_extra_scroll_area_to_timeline()
+	
 
 
 func clear_timeline():

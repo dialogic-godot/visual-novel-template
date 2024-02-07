@@ -189,7 +189,8 @@ func add_history_row_event(eventData):
 	HistoryTimeline.add_child(newHistoryRow)
 	if(reverseTimeline):
 		HistoryTimeline.move_child(newHistoryRow,0)
-	newHistoryRow.load_theme(curTheme)
+	if newHistoryRow.has_method('load_theme') and get_parent().settings.get_value('history', 'enable_dynamic_theme', false) == true:
+		newHistoryRow.load_theme(curTheme)
 	
 	var characterPrefix = ''
 	if eventData.has('character') and eventData.character != '':
@@ -219,9 +220,9 @@ func add_history_row_event(eventData):
 	
 	
 	# event logging handled here
-	# Text Events
+	# Text Events, replacing br with linebreaks
 	if eventData.event_id == 'dialogic_001':
-		newHistoryRow.add_history(str(characterPrefix, eventData.text), audioData)
+		newHistoryRow.add_history(str(characterPrefix, eventData.text.replace('[br]', '\n')), audioData)
 	# Character Arrivals
 	elif eventData.event_id == 'dialogic_002':
 		var logText = get_parent().settings.get_value('history', 'text_arrivals', 'has arrived')

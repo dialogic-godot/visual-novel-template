@@ -1,14 +1,13 @@
 [gd_scene load_steps=3 format=2]
 
 [ext_resource path="res://addons/dialogic/Example Assets/History/HistoryRow.gd" type="Script" id=1]
-
-[sub_resource type="StyleBoxEmpty" id=1]
+[ext_resource path="res://addons/dialogic/Example Assets/backgrounds/background-2.png" type="Texture" id=2]
 
 [node name="HistoryRow" type="PanelContainer"]
+self_modulate = Color( 1, 1, 1, 0 )
 rect_min_size = Vector2( 0, 28 )
 size_flags_horizontal = 3
 size_flags_vertical = 0
-custom_styles/panel = SubResource( 1 )
 script = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false
@@ -25,20 +24,22 @@ __meta__ = {
 }
 
 [node name="TextureRect" type="TextureRect" parent="."]
-visible = false
 margin_left = 7.0
 margin_top = 7.0
 margin_right = 51.0
-margin_bottom = 7.0
-size_flags_horizontal = 5
-size_flags_vertical = 0
+margin_bottom = 43.0
+texture = ExtResource( 2 )
 expand = true
+stretch_mode = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
-margin_bottom = 28.0
+margin_left = 7.0
+margin_top = 7.0
+margin_right = 51.0
+margin_bottom = 43.0
 size_flags_horizontal = 11
 size_flags_vertical = 3
 custom_constants/separation = 8
@@ -47,7 +48,6 @@ __meta__ = {
 }
 
 [node name="PlayAudioButton" type="Button" parent="HBoxContainer"]
-visible = false
 margin_right = 36.0
 margin_bottom = 36.0
 rect_min_size = Vector2( 36, 36 )
@@ -60,7 +60,9 @@ __meta__ = {
 }
 
 [node name="RichTextLabel" type="RichTextLabel" parent="HBoxContainer"]
-margin_bottom = 28.0
+margin_left = 44.0
+margin_right = 44.0
+margin_bottom = 36.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 bbcode_enabled = true
